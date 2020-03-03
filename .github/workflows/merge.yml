@@ -1,4 +1,5 @@
 ---
+# yamllint disable rule:line-length
 name: Merges
 
 # yamllint disable-line rule:truthy
@@ -31,5 +32,6 @@ jobs:
       - name: Publish to GitHub Packages Apache Maven
         run: mvn $MAVEN_CLI_OPTS deploy
         env:
-          MAVEN_RELEASE_REPO_USER: ${{ github.USER }}
-          MAVEN_RELEASE_REPO_PASS: ${{ github.token }}
+          MAVEN_RELEASE_REPO_USER: ${{ GITHUB_ACTOR }}
+          MAVEN_RELEASE_REPO_PASS: ${{ secrets.GITHUB_TOKEN }}
+          MAVEN_RELEASE_REPO_URL: https://maven.pkg.github.com/${{ GITHUB_REPOSITORY }}
