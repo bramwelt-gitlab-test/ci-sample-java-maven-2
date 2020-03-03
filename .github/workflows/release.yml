@@ -1,5 +1,4 @@
 ---
-# yamllint disable rule:line-length
 name: Releases
 
 # yamllint disable-line rule:truthy
@@ -20,18 +19,25 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      # - run: |
-      #     mvn $MAVEN_CLI_OPTS \
-      #       versions:set \
-      #       versions:set versions:update-child-modules versions:commit
-      #       -DremoveSnapshot \
-      #       -DgenerateBackupPoms=false
+      - name: Cache Packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Strip SNAPSHOT Version
+        run: |
+          mvn $MAVEN_CLI_OPTS \
+            versions:set versions:update-child-modules versions:commit \
+            -DremoveSnapshot \
+            -DgenerateBackupPoms=false
       - name: Publish GitHub Packages
         run: |
-            mvn $MAVEN_CLI_OPTS \
+          mvn $MAVEN_CLI_OPTS \
             deploy \
-            -D altDeploymentRepository=release::default::${MAVEN_RELEASE_REPOSITORY}
+            -D altDeploymentRepository=release::default::${MAVEN_RELEASE_REPO_URL}
         env:
-          MAVEN_RELEASE_REPO_USER: ${{ GITHUB_ACTOR }}
+          MAVEN_RELEASE_REPO_USER: ${{ github.actor }}
           MAVEN_RELEASE_REPO_PASS: ${{ secrets.GITHUB_TOKEN }}
-          MAVEN_RELEASE_REPO_URL: https://maven.pkg.github.com/${{ GITHUB_REPOSITORY }}
+          MAVEN_RELEASE_REPO_URL: https://maven.pkg.github.com/${{ github.repository }}
