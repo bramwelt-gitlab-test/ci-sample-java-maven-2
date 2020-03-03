@@ -29,7 +29,8 @@ jobs:
       - name: Publish GitHub Packages
         run: |
             mvn $MAVEN_CLI_OPTS \
-            deploy
+            deploy \
+            -D altDeploymentRepository=release::default::${MAVEN_RELEASE_REPOSITORY}
         env:
           MAVEN_RELEASE_REPO_USER: ${{ GITHUB_ACTOR }}
           MAVEN_RELEASE_REPO_PASS: ${{ secrets.GITHUB_TOKEN }}
