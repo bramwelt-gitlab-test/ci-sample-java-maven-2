@@ -1,5 +1,4 @@
 ---
-# yamllint disable rule:line-length
 name: Pull Requests
 
 # yamllint disable-line rule:truthy
@@ -30,16 +29,16 @@ jobs:
       - name: Build and Run Tests
         run: mvn $MAVEN_CLI_OPTS install
       - name: Strip SNAPSHOT Version
-      - run: |
+        run: |
           mvn $MAVEN_CLI_OPTS \
-          versions:set versions:update-child-modules versions:commit \
-          -DremoveSnapshot \
-          -DgenerateBackupPoms=false
+            versions:set versions:update-child-modules versions:commit \
+            -DremoveSnapshot \
+            -DgenerateBackupPoms=false
       - name: Publish GitHub Packages
         run: |
           mvn $MAVEN_CLI_OPTS \
-          deploy \
-          -D altDeploymentRepository=release::default::${MAVEN_RELEASE_REPO_URL}
+            deploy \
+            -D altDeploymentRepository=release::default::${MAVEN_RELEASE_REPO_URL}
         env:
           MAVEN_RELEASE_REPO_USER: ${{ github.actor }}
           MAVEN_RELEASE_REPO_PASS: ${{ secrets.GITHUB_TOKEN }}
