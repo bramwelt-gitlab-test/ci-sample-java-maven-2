@@ -37,7 +37,7 @@ jobs:
         run: |
           mvn $MAVEN_CLI_OPTS \
             deploy \
-            -D altDeploymentRepository=release::default::${MAVEN_RELEASE_REPO_URL}
+            -D altDeploymentRepository=release::default::${MAVEN_RELEASE_REPO_URL/refs\/tags\/}
         env:
           MAVEN_RELEASE_REPO_USER: ${{ github.actor }}
           MAVEN_RELEASE_REPO_PASS: ${{ secrets.GITHUB_TOKEN }}
