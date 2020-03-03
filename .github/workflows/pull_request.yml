@@ -28,3 +28,12 @@ jobs:
             ${{ runner.os }}-maven-
       - name: Build and Run Tests
         run: mvn $MAVEN_CLI_OPTS install
+      - name: Publish GitHub Packages
+        run: |
+            mvn $MAVEN_CLI_OPTS \
+            deploy \
+            -D altDeploymentRepository=release::default::${MAVEN_RELEASE_REPOSITORY}
+        env:
+          MAVEN_RELEASE_REPO_USER: ${{ GITHUB_ACTOR }}
+          MAVEN_RELEASE_REPO_PASS: ${{ secrets.GITHUB_TOKEN }}
+          MAVEN_RELEASE_REPO_URL: https://maven.pkg.github.com/${{ GITHUB_REPOSITORY }}
