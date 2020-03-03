@@ -30,13 +30,15 @@ jobs:
         run: |
           mvn $MAVEN_CLI_OPTS \
             versions:set versions:update-child-modules versions:commit \
-            -DnewVersion=${{ github.ref }} \
+            -DnewVersion=${VERSION/refs\/tags\/} \
             -DgenerateBackupPoms=false
+        env:
+          VERSION: ${{ github.ref }}
       - name: Publish GitHub Packages
         run: |
           mvn $MAVEN_CLI_OPTS \
             deploy \
-            -D altDeploymentRepository=release::default::${MAVEN_RELEASE_REPO_URL/refs\/tags\/}
+            -D altDeploymentRepository=release::default::${MAVEN_RELEASE_REPO_URL}
         env:
           MAVEN_RELEASE_REPO_USER: ${{ github.actor }}
           MAVEN_RELEASE_REPO_PASS: ${{ secrets.GITHUB_TOKEN }}
